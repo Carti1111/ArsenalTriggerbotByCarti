@@ -1,0 +1,1 @@
+In true fullscreen (alt+enter) or if you use OPENGL or VULKAN to render roblox set your aim_fov to 0 in config.ini else it will just break, sadly there's no way to fix this as python has limitations.  This will leave you with just triggerbot, if you dont use true fullscreen then you can be as blatant  as you want.
