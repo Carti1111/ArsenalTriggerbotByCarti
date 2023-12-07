@@ -1,5 +1,3 @@
-# original: https://github.com/Seconb/Arsenal-Colorbot
-
 from cv2 import findContours, threshold, dilate, inRange, cvtColor, COLOR_BGR2HSV, THRESH_BINARY, RETR_EXTERNAL, CHAIN_APPROX_NONE, contourArea
 from numpy import array, ones, uint8
 from os import path, system
@@ -13,6 +11,7 @@ from ctypes import windll
 from time import sleep
 from threading import Thread
 from urllib.request import urlopen
+from pygetwindow import getActiveWindow
 
 range=range
 len=len
@@ -23,14 +22,7 @@ max=max
 
 user32 = windll.user32
 
-CURRENT_VERSION = "v1.5" # IMPORTANT !!!!!! CHANGE lmfao
-
-system("title Colorbot")
-
-if urlopen("https://raw.githubusercontent.com/AndrewDarkyy/Colorbot-Modded/main/version.txt").read().decode("utf-8")!=CURRENT_VERSION+"\n":
-    print(Style.BRIGHT + Fore.CYAN + "This version is outdated, please get the latest one at " + Fore.YELLOW + "https://github.com/AndrewDarkyy/Colorbot-Modded/releases" + Style.RESET_ALL)
-    while True:
-        pass
+system("title Lunar1111's Arsenal Colorbot")
 
 switchmodes = ("Hold", "Toggle")
 
@@ -59,7 +51,7 @@ def check_key(string, key):
         except:
             print(f"Please change {key} to an existing key.")
             while True:
-                sleep(0.1) # omggg check if key exists so just, just amazing
+                sleep(0.1)
                 try:
                     new_config = ConfigParser()
                     new_config.optionxform = str
@@ -70,7 +62,7 @@ def check_key(string, key):
                 except:
                     pass
         return string
-
+    
 def print_banner_stuffz(key):
     if key == 0x01:
         return "LeftClick"
@@ -88,7 +80,10 @@ def print_banner_stuffz(key):
         return str(key)
 
 def is_roblox_focused():
-    return True
+    try:
+        return getActiveWindow().title == "Roblox"
+    except:
+        pass
 
 try:
     global A1M_KEY, SWITCH_MODE_KEY
@@ -106,11 +101,11 @@ try:
     A1M_SPEED_Y = float(config.get("Config", "A1M_SPEED_Y"))
     upper = array((123, 255, 217), dtype="uint8")
     lower = array((113, 206, 189), dtype="uint8")
-
+    
     if A1M_SPEED_X <= 0:
-        A1M_SPEED_X = 0.001 # everything multiplied by 0 is 0 (except infinity) so no use
+        A1M_SPEED_X = 0.001
     if A1M_SPEED_X > 1:
-        A1M_SPEED_X = 1 # more than one prob useless
+        A1M_SPEED_X = 1
 
     if 0 > TRIGGERBOT_DELAY:
         TRIGGERBOT_DELAY = 0
@@ -205,20 +200,25 @@ class colorbot:
 
 def print_banner(bot: colorbot):
     system("cls")
-    print(Style.BRIGHT + Fore.LIGHTMAGENTA_EX + "Lunar's Arsenal Colorbot" + Style.RESET_ALL)
-    print("====== Controls ======")
-    print("Aimbot Keybind      :", Fore.YELLOW + print_banner_stuffz(A1M_KEY) + Style.RESET_ALL)
-    print("Change Mode         :", Fore.YELLOW + print_banner_stuffz(SWITCH_MODE_KEY) + Style.RESET_ALL)
+    print(Style.BRIGHT + Fore.LIGHTGREEN_EX + """
+ ██████╗ ██████╗ ██╗      ██████╗ ██████╗ ██████╗  ██████╗ ████████╗
+██╔════╝██╔═══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝
+██║     ██║   ██║██║     ██║   ██║██████╔╝██████╔╝██║   ██║   ██║   
+██║     ██║   ██║██║     ██║   ██║██╔══██╗██╔══██╗██║   ██║   ██║   
+╚██████╗╚██████╔╝███████╗╚██████╔╝██║  ██║██████╔╝╚██████╔╝   ██║   
+ ╚═════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝  ╚═════╝    ╚═╝   """  + Style.RESET_ALL)
+    print("====== Configurations ======")
+    print("Camera Lock Toggling Keybind:", Fore.YELLOW + print_banner_stuffz(A1M_KEY) + Style.RESET_ALL)
+    print("Swap Between Hold/Toggle Mode:", Fore.YELLOW + print_banner_stuffz(SWITCH_MODE_KEY) + Style.RESET_ALL)
     print("==== Information =====")
-    print("Aimbot Mode         :", Fore.CYAN + switchmodes[bot.switchmode] + Style.RESET_ALL)
-    print("Aimbot FOV          :", Fore.CYAN + str(A1M_FOV) + Style.RESET_ALL)
-    print("Camera FOV          :", Fore.CYAN + str(CAM_FOV) + Style.RESET_ALL)
-    print("Shoot Delay         :", Fore.CYAN + str(TRIGGERBOT_DELAY) + Style.RESET_ALL)
-    print("Sensitivity         :", Fore.CYAN + "X: " + str(A1M_SPEED_X) + " Y: " + str(A1M_SPEED_Y) + Style.RESET_ALL)
-    print("Offset              :", Fore.CYAN + "X: " + str(A1M_OFFSET_X) + " Y: " + str(A1M_OFFSET_Y) + Style.RESET_ALL)
-    print("Aiming              :", (Fore.GREEN if bot.aimtoggled else Fore.RED) + str(bot.aimtoggled))
+    print("Aimbot Mode (Hold/Toggle):", Fore.CYAN + switchmodes[bot.switchmode] + Style.RESET_ALL)
+    print("Aimbot Field Of View:", Fore.CYAN + str(A1M_FOV) + Style.RESET_ALL)
+    print("Camera Field Of View:", Fore.CYAN + str(CAM_FOV) + Style.RESET_ALL)
+    print("Camera Lock and Triggerbot Reaction Time (In Milliseconds):", Fore.CYAN + str(TRIGGERBOT_DELAY) + Style.RESET_ALL)
+    print("Camera Lock Sensitivity:", Fore.CYAN + "X: " + str(A1M_SPEED_X) + " Y: " + str(A1M_SPEED_Y) + Style.RESET_ALL)
+    print("Camera Lock Offset:", Fore.CYAN + "X: " + str(A1M_OFFSET_X) + " Y: " + str(A1M_OFFSET_Y) + Style.RESET_ALL)
+    print("Camera Lock Status:", (Fore.GREEN if bot.aimtoggled else Fore.RED) + str(bot.aimtoggled))
 
-del CURRENT_VERSION
 del config
 del sdir
 del check_key
@@ -254,7 +254,7 @@ if __name__ == "__main__":
                             if not bot.aimtoggled:
                                 bot.a1mtoggle()
                                 print_banner(bot)
-                                while bot.aimtoggled:
+                                while bot.aimtoggled: 
                                     bot.process()
                                     if not GetAsyncKeyState(A1M_KEY) < 0:
                                         bot.a1mtoggle()
@@ -274,7 +274,7 @@ if __name__ == "__main__":
                             if not bot.aimtoggled:
                                 bot.a1mtoggle()
                                 print_banner(bot)
-                                while bot.aimtoggled:
+                                while bot.aimtoggled: 
                                     bot.process()
                                     if not bool(user32.GetKeyState(A1M_KEY) & 0x80):
                                         bot.a1mtoggle()
@@ -298,7 +298,7 @@ if __name__ == "__main__":
                                 if not is_pressed(A1M_KEY):
                                     bot.a1mtoggle()
                                     print_banner(bot)
-                else:
+                else: 
                     bot.a1mtoggle()
                     print_banner(bot)
                     while bot.aimtoggled:
